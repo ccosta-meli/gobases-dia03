@@ -1,0 +1,139 @@
+ESTRUCTURAS, ETIQUETAS, METODOS, COMPOSICION
+
+-- Declaracion de estructuras
+
+	type nombre struct {
+		campo1 tipoDeDato1
+		campo2 tipoDeDato2
+	}
+
+	type Persona struct {
+		Nombre string
+		Genero string
+		Edad int
+		Profesion string
+	}
+
+-- Como instanciar estructura
+
+	p1 := Persona{"Celeste", "Mujer", 34, "Ingeniera"}
+
+	p2 := Persona{
+		Nombre: "Nahuel",
+		Genero: "Hombre",
+		Edad: 30,
+		Profesion: "Ingeniero"
+	}
+
+	var p3 Persona
+	p3.Nombre = "Ulises"
+
+-- Acceder o modificar valor de un campo
+
+	p2.Edad
+	p2.Edad = 33
+
+-- Utilizar estructuras como un tipo de dato
+
+	type Preferencias struct {
+		Comidas string
+		Peliculas string
+		Series string
+	}
+
+	type Persona struct {
+		Nombre string
+		Genero string
+		Gustos Preferencias
+	}
+
+	p1 := Persona{"Celeste", "Mujer", Preferencias{"Flan", "Titanic", "Breaking Bad"}}
+
+	p2 := Persona {
+		Nombre: "Celeste",
+		Genero: "Mujer",
+		Gustos: Preferencias {
+			Comidas: "Flan",
+			Peliculas: "Titanic",
+			Series: "Breaking Bad"
+		}
+	}
+
+	p3 := Persona{}
+
+-- Para acceder o modificar un campo
+
+	p2.Gustos.Series = "Better Call Saul"
+	p3.Gustos = Preferencias{Comidas: "Flan", Peliculas: "", Series: ""}
+
+----------------------------------------
+-- ETIQUETAS de estructuras
+
+type Persona struct {
+    PrimerNombre string `json:"primer_nombre"`
+    Apellido string `json:"apellido"`
+}
+
+-- Eliminar campos vacios -> debido a que los tipos en Go tienen un valor "cero", si queremos omitir cualquier 
+resultado cuyo valor sea "cero, debemos incluit en la etiqueta el atributo "omitempty"
+
+type Persona struct {
+    PrimerNombre string `json:"primer_nombre"`
+    Apellido string `json:"apellido,omitempty"`
+}
+
+-- Ignorar campos privados
+
+type Usuario struct {
+    Nombre string `json:"nombre"`
+    Apellido string `json:"apellido"`
+    Password string `json:"-"`
+}
+
+----------------------------------------
+-- METODOS -> Funcion con un argumento recepto especial
+
+type Circulo struct {
+    radio float64
+}
+
+func (v Circulo) metodo() {
+
+}
+
+func (c Circulo) area() float64 {
+    return math.PI * c.radio * c.radio
+}
+
+func (c Circulo) perim() float64 {
+    return 2 * math.PI * c.radio
+}
+
+----------------------------------------
+-- COMPOSICION: Concepto de herencia, utiliza estructura padre como campo en estructuras hijas (embedding structs)
+
+type Vehiculo struct {
+    Km float64
+    Tiempo float64
+}
+
+func (v Vehiculo) DetalleVehiculo() {
+    fmt.Printf("km: %f, tiempo: %f", v.Km, v.Tiempo)
+}
+
+type Auto struct {
+    Vehiculo
+}
+
+func (a *Auto) Correr(minutos int) {
+    a.Tiempo = float64(minutos) / 60
+    a.Km = a.Tiempo * 100
+}
+
+func (a *Auto) DetalleAuto() {
+    a.DetalleVehiculo()
+}
+
+auto := Auto{}
+auto.Correr(360)
+auto.Detalle()
